@@ -26,17 +26,17 @@ class ImageFile:
 
     def write(self, b):
         for i in b:
-            self.writechar(i)
+            self._writechar(i)
 
     def read(self, n):
-        return bytes(self.readchar() for i in range(n))
+        return bytes(self._readchar() for i in range(n))
 
-    def writechar(self, n):
+    def _writechar(self, n):
         r, g, b = self.img.get(self.pos)
         self.img.set(self.pos, encode(r, g, b, n))
         self.pos += 1
 
-    def readchar(self):
+    def _readchar(self):
         val = decode(*self.img.get(self.pos))
         self.pos += 1
         return val
@@ -50,10 +50,10 @@ class EncodedImageFile(ImageFile):
         self.key = key
         super().__init__(img)
 
-    def writechar(self, n):
-        super().writechar((n + self.key) % 256)
+    def _writechar(self, n):
+        super()._writechar((n + self.key) % 256)
 
-    def readchar(self):
-        return (super().readchar() - self.key) % 256
+    def _readchar(self):
+        return (super()._readchar() - self.key) % 256
     
         

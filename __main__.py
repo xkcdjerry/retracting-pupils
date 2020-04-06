@@ -26,7 +26,6 @@ def main():
 
     # check and unpack
     if len(args) != 4 or args[1] not in ("encode", "decode"):
-        print(args)
         exit_with("Usage: %s (encode|decode) filename imagename \
 [--key k]" % os.path.basename(args[0]))
     command, filename, imagename = args[1:]
@@ -39,7 +38,7 @@ def main():
         exit_with('image file "%s" does not exist' % imagename)
     
     if command == "encode":
-        # handle the files (EAPF)
+        # handle the files via EAPF
         try:
             fin = open(filename, 'rb')
         except FileNotFoundError:
@@ -51,11 +50,13 @@ def main():
             # some error with the file size
             exit_with(e.args[0])
 
-        newname = "%s/encoded_%s" % os.path.split(imagename)
+        dirname, fname = os.path.split(imagename)
+        fname = os.path.splitext(fname)[0]+'.png'
+        newname = "%s/encoded_%s" % (dirname, fname)
         img.save(newname)
 
     if command == "decode":
-        # handle the output file (EAPF)
+        # handle the output file via EAPF
         try:
             fout = open(filename, 'xb')
         except FileExistsError:
