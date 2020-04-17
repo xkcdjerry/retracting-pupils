@@ -1,25 +1,26 @@
 """A wrapper around PIL.Image"""
 import PIL.Image as image
 
+
 class RGBImage:
-    def __init__(self,fname):
-        self._img=image.open(fname).convert("RGB")
+    def __init__(self, fname):
+        self._img = image.open(fname).convert("RGB")
 
-    def __setitem__(self,xy,val):
-        self._img.putpixel(xy,val)
+    def __setitem__(self, xy, val):
+        self._img.putpixel(xy, val)
 
-    def __getitem__(self,xy):
+    def __getitem__(self, xy):
         return self._img.getpixel(xy)
 
-    def get(self,n):
+    def get(self, n):
         """get the n th pixel, counting left to right and up to down."""
-        return self[divmod(n,self.height)]
+        return self[divmod(n, self.height)]
 
-    def set(self,n,val):
+    def set(self, n, val):
         """set the n th pixel to val, counting left to right and up to down."""
-        self[divmod(n,self.height)]=val
+        self[divmod(n, self.height)] = val
 
-    def save(self,fname):
+    def save(self, fname):
         self._img.save(fname)
 
     def resize(self, size):
