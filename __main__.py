@@ -3,6 +3,7 @@ import os
 import math
 
 import api
+import protocol as col
 
 def exit_with(s):
     sys.stderr.write(s)
@@ -53,8 +54,8 @@ github.com/xkcdjerry/retracting-pupils/wiki""" % os.path.basename(args[0]))
             exit_with('data file "%s" does not exist' % filename)
 
         if autoresize:
-            fsize = os.path.getsize(filename)
-            factor = max(1, math.sqrt(fsize/img.width/img.height)+0.1)
+            fsize = os.path.getsize(filename) + col.HEADSIZE
+            factor = math.sqrt(fsize/img.width/img.height)+0.1
             imgsize = int(img.width*factor), int(img.height*factor)
             img.resize(imgsize)
         try:
