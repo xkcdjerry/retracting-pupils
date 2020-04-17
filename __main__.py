@@ -31,6 +31,7 @@ def main():
     command, filename, imagename = args[1:]
     
     # ----------process--------
+    
     # try to open the image
     try:
         img = api.open(imagename)
@@ -51,8 +52,8 @@ def main():
             exit_with(e.args[0])
 
         dirname, fname = os.path.split(imagename)
-        fname = os.path.splitext(fname)[0]+'.png'
-        newname = "%s/encoded_%s" % (dirname, fname)
+        fname = "encoded_%s.png" % os.path.splitext(fname)[0]
+        newname = os.path.join(dirname, fname)
         img.save(newname)
 
     if command == "decode":
