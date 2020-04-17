@@ -53,10 +53,10 @@ github.com/xkcdjerry/retracting-pupils/wiki""" % os.path.basename(args[0]))
             exit_with('data file "%s" does not exist' % filename)
 
         if autoresize:
-            l = os.path.getsize(filename)
-            factor = max(1, math.sqrt(l/img.width/img.height)+0.1)
-            size = int(img.width*factor), int(img.height*factor)
-            img.resize(size)
+            fsize = os.path.getsize(filename)
+            factor = max(1, math.sqrt(fsize/img.width/img.height)+0.1)
+            imgsize = int(img.width*factor), int(img.height*factor)
+            img.resize(imgsize)
         try:
             api.dump(fin, img, key=key)
         except ValueError as e:
