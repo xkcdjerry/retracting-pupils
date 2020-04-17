@@ -1,5 +1,6 @@
 import sys
 import os
+import math
 
 import api
 
@@ -12,6 +13,7 @@ def main():
     # --------parse---------
     args = sys.argv.copy()
     key = None
+    autoresize = False
     if '--key' in args:
         # deal with the key
         index = args.index('--key')
@@ -23,11 +25,16 @@ def main():
         except ValueError:
             exit_with("Error: key isn't an integer from 0 to 255")
         args[index:index+2]=[]
+    if '--auto-resize' in args:
+        args.remove('--auto-resize')
+        autoresize = True
 
     # check and unpack
     if len(args) != 4 or args[1] not in ("encode", "decode"):
-        exit_with("Usage: %s (encode|decode) filename imagename \
-[--key k]" % os.path.basename(args[0]))
+        exit_with("""Usage:
+%s (encode|decode) filename imagename [--key k] [--auto-resize]
+(For more info, visit the wiki at \
+github.com/xkcdjerry/retracting-pupils/wiki""" % os.path.basename(args[0]))
     command, filename, imagename = args[1:]
     
     # ----------process--------
@@ -45,6 +52,11 @@ def main():
         except FileNotFoundError:
             exit_with('data file "%s" does not exist' % filename)
 
+        if autoresize:
+            l = os.path.getsize(filename)
+            factor = max(1, math.sqrt(l/img.width/img.height)+0.1)
+            size = int(img.width*factor), int(img.height*factor)
+            img.resize(size)
         try:
             api.dump(fin, img, key=key)
         except ValueError as e:
@@ -57,6 +69,9 @@ def main():
         img.save(newname)
 
     if command == "decode":
+        if autoresize:
+            sys.stderr.write('WARNING: Flag "--auto-resize" only works with \
+option "encode", in "decode" mode it will be ignored\n')
         # handle the output file via EAPF
         try:
             fout = open(filename, 'xb')
